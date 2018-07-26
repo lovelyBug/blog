@@ -35,6 +35,10 @@ export default class SiderComponent extends Component {
           </SubMenu>
           <Menu.Item key="4">
             <Icon type="inbox" />
+            <span>草稿箱</span>
+          </Menu.Item>
+          <Menu.Item key="5">
+            <Icon type="inbox" />
             <span>回收站</span>
           </Menu.Item>
         </Menu>

@@ -35,11 +35,14 @@
     margin-top: 25px;
     margin-left: 20px;
 }
-.personal-sort-style{
-    margin-top: 25px;
-    margin-left: 20px;
-}
 .blog-type-div-style{
     margin-top: 25px;
     margin-left: 20px;
+}
+.blog-label-input-style{
+    margin-left: 8px;
+}
+.article-label-text-style{
+    margin-left: 20px;
+    color: green;
 }

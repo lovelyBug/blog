@@ -5,79 +5,133 @@ import BraftEditor from 'braft-editor';
 import 'braft-editor/dist/braft.css';
 import '../css/components/Editor.css';
 
-const menu = (
-    <Menu defaultSelectedKeys={['1']}>
-        <Menu.Item key="1">请选择</Menu.Item>
-        <Menu.Item key="2">原创</Menu.Item>
-        <Menu.Item key="3">转裁</Menu.Item>
-        <Menu.Item key="4">翻译</Menu.Item>
-    </Menu>
-);
-const blogType = (
-    <Menu defaultSelectedKeys={['1']}>
-        <Menu.Item key="1">选择分类</Menu.Item>
-        <Menu.Item key="2">RN</Menu.Item>
-        <Menu.Item key="3">React</Menu.Item>
-        <Menu.Item key="4">JavaScript</Menu.Item>
-        <Menu.Item key="5">Node</Menu.Item>
-        <Menu.Item key="6">跨域</Menu.Item>
-        <Menu.Item key="7">HTTP</Menu.Item>
-        <Menu.Item key="8">ES6</Menu.Item>
-        <Menu.Item key="9">CSS</Menu.Item>
-    </Menu>
-);
 export default class Demo extends React.Component {
+  constructor(props){
+    super(props);
+    this.state={
+        articleTitle: '',
+        articleContent: '',
+        articleLabel: '',
+        showArticleLabelText: '',
+        articleType: '请选择',
+        articleSort: '选择分类',
+        isPrivate: false,
+    }
+  }
+  menu = (
+    <Menu selectable={true} defaultSelectedKeys={['1']} onClick={(item)=>{this.setState({articleType: item.key})}}>
+        <Menu.Item key="请选择">请选择</Menu.Item>
+        <Menu.Item key="原创">原创</Menu.Item>
+        <Menu.Item key="转裁">转裁</Menu.Item>
+        <Menu.Item key="翻译">翻译</Menu.Item>
+    </Menu>
+  );
+  blogType = (
+    <Menu selectable={true} defaultSelectedKeys={['1']} onClick={(item)=>{this.setState({articleSort: item.key})}}>
+        <Menu.Item key="选择分类">选择分类</Menu.Item>
+        <Menu.Item key="RN">RN</Menu.Item>
+        <Menu.Item key="React">React</Menu.Item>
+        <Menu.Item key="JavaScript">JavaScript</Menu.Item>
+        <Menu.Item key="Node">Node</Menu.Item>
+        <Menu.Item key="跨域">跨域</Menu.Item>
+        <Menu.Item key="HTTP">HTTP</Menu.Item>
+        <Menu.Item key="ES6">ES6</Menu.Item>
+        <Menu.Item key="CSS">CSS</Menu.Item>
+    </Menu>
+  );
+  /**
+   * 当标题改变时触发该事件
+   */
+  handleArticleTitleChange = (e) =>{
+    this.setState({
+        articleTitle: e.target.value
+    });
+  }
+  /**
+   * 当内容改变时触发该事件
+   */
+  handleArticleContentChange = (e) =>{
+    this.setState({
+        articleContent: e.target.value
+    });
+  }/**
+   */
+  handleArticleLabelChange = (e) =>{
+    this.setState({
+        articleLabel: e.target.value
+    });
+  }
+  /**
+   * 添加标签时触发该事件
+   */
+  addArticleLabel = (e) =>{
+    this.setState({
+        showArticleLabelText: this.state.showArticleLabelText +  this.state.articleLabel + '  '
+    });
+  }
+  /**
+   * 发布博客时触发该事件
+   */
+  publishBlog = () =>{
 
+  }
+  /**
+   * 保存博客时触发该事件
+   */
+  saveBlog = () =>{
+        //获取content
+        //this.editorInstance.getRawContent().blocks[0].text;
+        //获取Raw格式内容
+        //this.editorInstance.getHTMLContent();
+  }
   render () {
     const editorProps = {
       height: 500,
       contentFormat: 'raw',
       initialContent: 'Hello World!',
-      onChange: this.handleChange,
-      onRawChange: this.handleRawChange
+      //onChange: this.handleChange,
+      //onRawChange: this.handleRawChange,
+      placeholder: '在这里编辑文章'
     }
 
     return (
       <div className="demo">
         <div className='blog-title-style'>
-            <input className='blog-title-input' placeholder='请输入文章标题'/>
+            <input className='blog-title-input' placeholder='请输入文章标题' onChange={this.handleArticleTitleChange}/>
         </div>
-        <BraftEditor {...editorProps}/>
+        <BraftEditor ref={instance => this.editorInstance = instance} {...editorProps} />
         <hr />
-        <div className='blog-label-style'>文章标签：</div>
-        <div className='personal-sort-style'>个人分类：</div>
+        <div className='blog-label-style'>
+            文章标签：
+            <input className='blog-label-input-style' placeholder='文章标签' onChange={this.handleArticleLabelChange}/>
+            <Button style={{ marginLeft: 8 }} onClick={this.addArticleLabel}>
+                    添加 <Icon type="plus" />
+            </Button>
+            <span className='article-label-text-style'>{this.state.showArticleLabelText}</span>
+        </div>
         <div className='blog-type-div-style'>
             <span>文章类型：</span>
-            <Dropdown overlay={menu}>
-                <Button style={{ marginLeft: 8 }}>
-                    请选择 <Icon type="down" />
+            <Dropdown overlay={this.menu}>
+                <Button style={{ marginLeft: 8,width: 100 }}>
+                    {this.state.articleType} <Icon type="down" />
                 </Button>
             </Dropdown>
             <span className='blog-type-sort'>博客分类：</span>
-            <Dropdown overlay={blogType}>
-                <Button style={{ marginLeft: 8 }}>
-                    选择分类 <Icon type="down" />
+            <Dropdown overlay={this.blogType}>
+                <Button style={{ marginLeft: 8,width: 100 }}>
+                    {this.state.articleSort} <Icon type="down" />
                 </Button>
             </Dropdown>
         </div>
         <div className='private-article-style'>
             私密文章：
-            <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="cross" />} />
+            <Switch onChange={(checked)=>{this.setState({isPrivate: checked})}} style={{ marginLeft: 8 }} checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="cross" />} />
         </div>
         <div className='blog-btn-div-style'>
             <Button className='publish-btn' type="primary">发布博客</Button>
-            <Button className='save-btn' type="primary">保存为草稿</Button>
+            <Button className='save-btn' type="primary" onClick={this.saveBlog}>保存为草稿</Button>
         </div>
       </div>
     )
   }
-
-  handleChange = (content) => {
-    console.log(content)
-  }
-
-  handleRawChange = (rawContent) => {
-    console.log(rawContent)
-  }
-
 }
