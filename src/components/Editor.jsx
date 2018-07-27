@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button,Menu,Dropdown,Icon,Switch} from 'antd';
+import {Button,Menu,Dropdown,Icon,Switch,message} from 'antd';
 // 引入编辑器以及编辑器样式
 import BraftEditor from 'braft-editor';
 import 'braft-editor/dist/braft.css';
@@ -83,6 +83,34 @@ export default class Demo extends React.Component {
         //this.editorInstance.getRawContent().blocks[0].text;
         //获取Raw格式内容
         //this.editorInstance.getHTMLContent();
+        var myDate = new Date();
+        let time = myDate.toLocaleString();
+        let URL = 'http://localhost:9000/add_blog';
+        let info = "title=" + this.state.articleTitle +
+                    "&content=" + this.editorInstance.getHTMLContent() +
+                    "&label=" + this.state.showArticleLabelText + 
+                    "&type=" + this.state.articleType + 
+                    "&classify=" + this.state.articleSort + 
+                    "&isPrivate=" + this.state.isPrivate + 
+                    "&createTime=" + time + 
+                    "&isPublish=" + 0;
+        fetch(URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: info,
+            mode:'cors',
+            })
+            .then((res)=>{
+                res.json().then(function (json) {
+                    //从服务端传来的JSON数据
+                    message.success(json.message);
+                });
+            })
+            .catch((e)=>{
+              message.error('请求失败！');
+            });
   }
   render () {
     const editorProps = {
