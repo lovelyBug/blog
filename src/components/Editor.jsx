@@ -4,8 +4,10 @@ import {Button,Menu,Dropdown,Icon,Switch,message} from 'antd';
 import BraftEditor from 'braft-editor';
 import 'braft-editor/dist/braft.css';
 import '../css/components/Editor.css';
+import {connect} from 'react-redux';
+import * as actions from '../action/index';
 
-export default class Demo extends React.Component {
+class Editor extends React.Component {
   constructor(props){
     super(props);
     this.state={
@@ -17,6 +19,9 @@ export default class Demo extends React.Component {
         articleSort: '选择分类',
         isPrivate: false,
     }
+  }
+  componentWillReceiveProps(nextProps){
+    message.success('redux: ' + nextProps.data);
   }
   menu = (
     <Menu selectable={true} defaultSelectedKeys={['1']} onClick={(item)=>{this.setState({articleType: item.key})}}>
@@ -85,7 +90,6 @@ export default class Demo extends React.Component {
         //this.editorInstance.getHTMLContent();
         var myDate = new Date();
         let time = myDate.toLocaleString();
-        let URL = 'http://localhost:9000/add_blog';
         let info = "title=" + this.state.articleTitle +
                     "&content=" + this.editorInstance.getHTMLContent() +
                     "&label=" + this.state.showArticleLabelText + 
@@ -94,31 +98,14 @@ export default class Demo extends React.Component {
                     "&isPrivate=" + this.state.isPrivate + 
                     "&createTime=" + time + 
                     "&isPublish=" + 0;
-        fetch(URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: info,
-            mode:'cors',
-            })
-            .then((res)=>{
-                res.json().then(function (json) {
-                    //从服务端传来的JSON数据
-                    message.success(json.message);
-                });
-            })
-            .catch((e)=>{
-              message.error('请求失败！');
-            });
+        //发送saveBlog的action
+        this.props.dispatch(actions.ADD_BLOG(info,this.props.dispatch));
   }
   render () {
     const editorProps = {
       height: 500,
       contentFormat: 'raw',
       initialContent: 'Hello World!',
-      //onChange: this.handleChange,
-      //onRawChange: this.handleRawChange,
       placeholder: '在这里编辑文章'
     }
 
@@ -163,3 +150,7 @@ export default class Demo extends React.Component {
     )
   }
 }
+const mapStateToProps = (state,ownProps)=>({
+    data: state.blog.data,
+});
+export default connect(mapStateToProps)(Editor);
