@@ -21,7 +21,7 @@ class Editor extends React.Component {
     }
   }
   componentWillReceiveProps(nextProps){
-    message.success('redux: ' + nextProps.data);
+      message.success('redux: ' + nextProps.status);
   }
   menu = (
     <Menu selectable={true} defaultSelectedKeys={['1']} onClick={(item)=>{this.setState({articleType: item.key})}}>
@@ -78,7 +78,7 @@ class Editor extends React.Component {
    * 发布博客时触发该事件
    */
   publishBlog = () =>{
-
+    this.props.dispatch(actions.QUERY_BLOG(this.props.dispatch));
   }
   /**
    * 保存博客时触发该事件
@@ -143,7 +143,7 @@ class Editor extends React.Component {
             <Switch onChange={(checked)=>{this.setState({isPrivate: checked})}} style={{ marginLeft: 8 }} checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="cross" />} />
         </div>
         <div className='blog-btn-div-style'>
-            <Button className='publish-btn' type="primary">发布博客</Button>
+            <Button className='publish-btn' type="primary" onClick={this.publishBlog}>发布博客</Button>
             <Button className='save-btn' type="primary" onClick={this.saveBlog}>保存为草稿</Button>
         </div>
       </div>
@@ -151,6 +151,7 @@ class Editor extends React.Component {
   }
 }
 const mapStateToProps = (state,ownProps)=>({
-    data: state.blog.data,
+    status: state.blog.status,
+    data: state.blog.data
 });
 export default connect(mapStateToProps)(Editor);
