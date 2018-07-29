@@ -58,9 +58,36 @@ app.post('/query_blog',urlencodeParser,(req,res)=>{
             console.log(err);
             return;
         }
-        console.log(rows);
         res.send(rows);
     });
+});
+/**
+ * 删除博客，删除成功后立即查询数据库并返回最新的数据库信息
+ */
+app.post('/delete_blog',urlencodeParser,(req,res)=>{
+    //单个博客删除
+    let sql = 'DELETE  FROM blogs WHERE id=' + req.body.data;
+    if(req.body.data.length > 1){
+        //多个博客删除
+        sql = 'DELETE  FROM blogs WHERE id in (' + req.body.data +  ')';
+    }
+    db.DBConnection.query(sql,(err,rows,fields)=>{
+        if(err){
+            console.log(err);
+            return;
+        }
+        console.log('delete success');
+        let str = 'SELECT * FROM blogs';
+        db.DBConnection.query(str,(err,rows,fields)=>{
+            if(err){
+                console.log(err);
+                return;
+            }
+            console.log('query success');
+            res.send(rows);
+    });
+    });
+    
 });
 /**
  * 监听9000端口

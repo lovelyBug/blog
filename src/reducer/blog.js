@@ -9,17 +9,17 @@ export const blog = handleActions({
     QUERY_BLOG_RESULT: (state,action)=>({
         ...state,
         status:action.type,
-        data: action.payload
+        data: action.payload.data
     }),
     DELETE_BLOG_RESULT: (state,action)=>({
         ...state,
         status:action.type,
-        data: action.payload
+        data: action.payload.data
     }),
     MODIFY_BLOG_RESULT: (state,action)=>({
         ...state,
         status:action.type,
-        data: action.payload
+        data: action.payload.data
     })
 },{
     //初始默认值

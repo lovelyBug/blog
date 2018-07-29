@@ -59,8 +59,7 @@ export const QUERY_BLOG = (dispatch) => async =>{
         .then((res)=>{
             res.json().then(function (json) {
                 //从服务端传来的JSON数据
-                message.success(json[0].title);
-                dispatch(QUERY_BLOG_RESULT({data: json.message}));
+                dispatch(QUERY_BLOG_RESULT({data: json}));
             });
         })
         .catch((e)=>{
@@ -72,8 +71,28 @@ export const QUERY_BLOG = (dispatch) => async =>{
  * @param {*} state 
  * @param {*} dispatch 
  */
-export const DELETE_BLOG = (state,dispatch) =>{
-    
+export const DELETE_BLOG = (info,dispatch) => async =>{
+    let URL = 'http://localhost:9000/delete_blog';
+    fetch(URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: info,
+        mode:'cors',
+        })
+        .then((res)=>{
+            res.json().then(function (json) {
+                //从服务端传来的JSON数据
+                dispatch(DELETE_BLOG_RESULT({data: json}));
+            })
+            .catch((e)=>{
+                message.error('解析失败！' + e);
+            });
+        })
+        .catch((e)=>{
+          message.error('请求失败！');
+        });
 }
 /**
  * 修改博客
