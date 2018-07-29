@@ -1,17 +1,47 @@
 import React, { Component } from 'react';
-import { Menu, Icon } from 'antd';
-
+import { Menu, Icon,message } from 'antd';
+import * as actions from '../action/index';
+import {connect} from 'react-redux';
 const SubMenu = Menu.SubMenu;
-
-export default class SiderComponent extends Component {
-  state = {
-    collapsed: false,
+class SiderComponent extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      collapsed: false
+    }
   }
-
   toggleCollapsed = () => {
     this.setState({
       collapsed: !this.state.collapsed,
     });
+  }
+  /**
+   * 点击不同的menu子元素，触发不同的action，显示相应页面
+   */
+  onMenuClick = (key) =>{
+    message.success(key);
+    switch(key){
+      case '新建博客':
+        this.props.dispatch(actions.NEW_BLOG());
+        break;
+      case '博客列表':
+        this.props.dispatch(actions.BLOG_LIST());
+        break;
+      case '未读评论':
+        this.props.dispatch(actions.UNREAD_COMMENT());
+        break;
+      case '所有评论':
+        this.props.dispatch(actions.ALL_COMMENT());
+        break;
+      case '草稿箱':
+        this.props.dispatch(actions.DRAFTS());
+        break;
+      case '回收站':
+        this.props.dispatch(actions.RECYSLE_BIN());
+        break;
+      default:
+        return;
+    }
   }
   render() {
     return (
@@ -20,25 +50,26 @@ export default class SiderComponent extends Component {
           mode="inline"
           theme="dark"
           inlineCollapsed={this.state.collapsed}
+          onClick={(item)=>{this.onMenuClick(item.key)}}
         >
-          <Menu.Item key="1">
-            <Icon type="pie-chart" />
+          <Menu.Item key="home">
+            <Icon type="home" />
             <span>我的面板</span>
           </Menu.Item>
-          <SubMenu key="sub1" title={<span><Icon type="mail" /><span>博客管理</span></span>}>
-            <Menu.Item key="5">新建博客</Menu.Item>
-            <Menu.Item key="6">博客列表</Menu.Item>
+          <SubMenu key="sub1" title={<span><Icon type="file-text" /><span>博客管理</span></span>}>
+            <Menu.Item key="新建博客">新建博客</Menu.Item>
+            <Menu.Item key="博客列表">博客列表</Menu.Item>
           </SubMenu>
-          <SubMenu key="sub2" title={<span><Icon type="appstore" /><span>评论管理</span></span>}>
-            <Menu.Item key="9">未读评论</Menu.Item>
-            <Menu.Item key="10">所有评论</Menu.Item>
+          <SubMenu key="sub2" title={<span><Icon type="message" /><span>评论管理</span></span>}>
+            <Menu.Item key="未读评论">未读评论</Menu.Item>
+            <Menu.Item key="所有评论">所有评论</Menu.Item>
           </SubMenu>
-          <Menu.Item key="4">
+          <Menu.Item key="草稿箱">
             <Icon type="inbox" />
             <span>草稿箱</span>
           </Menu.Item>
-          <Menu.Item key="5">
-            <Icon type="inbox" />
+          <Menu.Item key="回收站">
+            <Icon type="delete" />
             <span>回收站</span>
           </Menu.Item>
         </Menu>
@@ -46,3 +77,4 @@ export default class SiderComponent extends Component {
     );
   }
 }
+export default connect()(SiderComponent);

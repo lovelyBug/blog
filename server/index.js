@@ -35,8 +35,8 @@ app.post('/add_blog',urlencodeParser,(req,res)=>{
         req.body.createTime,
         req.body.isPublish
     ];
-    let addBlog = 'INSERT blogs(title,content,label,type,classify,isPrivate,createTime,isPublish) VALUES(?,?,?,?,?,?,?,?)';
-    db.DBConnection.query(addBlog,params,(err,rows,fields)=>{
+    let sql = 'INSERT blogs(title,content,label,type,classify,isPrivate,createTime,isPublish) VALUES(?,?,?,?,?,?,?,?)';
+    db.DBConnection.query(sql,params,(err,rows,fields)=>{
         if(err){
             console.log(err);
             return;
@@ -49,6 +49,22 @@ app.post('/add_blog',urlencodeParser,(req,res)=>{
     });
 });
 /**
+ * 查询博客信息
+ */
+app.post('/query_blog',urlencodeParser,(req,res)=>{
+    let sql = 'SELECT * FROM blogs';
+    db.DBConnection.query(sql,(err,rows,fields)=>{
+        if(err){
+            console.log(err);
+            return;
+        }
+        console.log(rows);
+        res.send(rows);
+    });
+});
+/**
  * 监听9000端口
  */
-app.listen(9000);
+app.listen(9000,()=>{
+    console.log('正在监听port：9000');
+});
