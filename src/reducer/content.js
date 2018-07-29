@@ -24,6 +24,11 @@ export const content = handleActions({
     RECYSLE_BIN: (state,actions)=>({
         ...state,
         status: actions.type,
+    }),
+    MODIFY_SINGLE_BLOG: (state,actions)=>({
+        ...state,
+        status: actions.type,
+        id: actions.payload.id
     })
 },{
 

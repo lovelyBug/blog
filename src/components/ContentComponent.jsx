@@ -6,6 +6,7 @@ import UnreadComment from '../components/UnreadComment';
 import AllComment from '../components/AllComment';
 import Drafts from '../components/Drafts';
 import RecycleBin from '../components/RecycleBin';
+import ModifyBlog from '../components/ModifyBlog';
 import {connect} from 'react-redux';
 class ContentComponent extends Component{
 
@@ -26,6 +27,8 @@ class ContentComponent extends Component{
                 return <Drafts/>;
             case 'RECYSLE_BIN':
                 return <RecycleBin/>;
+            case 'MODIFY_SINGLE_BLOG':
+                return <ModifyBlog id={this.props.id}/>
             default:
                 return <Editor/>;;
         }
@@ -37,6 +40,7 @@ class ContentComponent extends Component{
     }
 }
 const mapStateToProps = (state,ownProps)=>({
-    status: state.content.status
+    status: state.content.status,
+    id: state.content.id
 });
 export default connect(mapStateToProps)(ContentComponent);

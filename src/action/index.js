@@ -5,6 +5,7 @@ import {message} from 'antd';
  */
 export const ADD_BLOG_RESULT = createAction('ADD_BLOG_RESULT');
 export const QUERY_BLOG_RESULT = createAction('QUERY_BLOG_RESULT');
+export const QUERY_SINGLE_BLOG_RESULT = createAction('QUERY_SINGLE_BLOG_RESULT');
 export const DELETE_BLOG_RESULT = createAction('DELETE_BLOG_RESULT');
 export const MODIFY_BLOG_RESULT = createAction('MODIFY_BLOG_RESULT');
 /**
@@ -16,6 +17,7 @@ export const UNREAD_COMMENT = createAction('UNREAD_COMMENT');
 export const ALL_COMMENT = createAction('ALL_COMMENT');
 export const DRAFTS = createAction('DRAFTS');
 export const RECYSLE_BIN = createAction('RECYSLE_BIN');
+export const MODIFY_SINGLE_BLOG = createAction('MODIFY_SINGLE_BLOG');
 /**
  * 添加博客
  * @param {*} state 
@@ -47,19 +49,26 @@ export const ADD_BLOG = (info,dispatch) => async =>{
  * @param {*} state 
  * @param {*} dispatch 
  */
-export const QUERY_BLOG = (dispatch) => async =>{
+export const QUERY_BLOG = (info,dispatch) => async =>{
     let URL = 'http://localhost:9000/query_blog';
     fetch(URL, {
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
         },
+        body: 'data=' + info,
         mode:'cors',
         })
         .then((res)=>{
+            //从服务端传来的JSON数据
             res.json().then(function (json) {
-                //从服务端传来的JSON数据
-                dispatch(QUERY_BLOG_RESULT({data: json}));
+                //根据info参数判断是否为多查询
+                if(info === 'all'){
+                    dispatch(QUERY_BLOG_RESULT({data: json}));
+                }else{
+                    dispatch(QUERY_SINGLE_BLOG_RESULT({data: json}));
+                }
+                
             });
         })
         .catch((e)=>{
@@ -99,6 +108,24 @@ export const DELETE_BLOG = (info,dispatch) => async =>{
  * @param {*} state 
  * @param {*} dispatch 
  */
-export const MODIFY_BLOG = (state,dispatch) =>{
-    
+export const MODIFY_BLOG = (info,dispatch) => async =>{
+    let URL = 'http://localhost:9000/modify_blog';
+    fetch(URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: info,
+        mode:'cors',
+        })
+        .then((res)=>{
+            res.json().then(function (json) {
+                //从服务端传来的JSON数据
+                //message.success(json.message);
+                dispatch(MODIFY_BLOG_RESULT({data: json.message}));
+            });
+        })
+        .catch((e)=>{
+          message.error('请求失败！');
+        });
 }

@@ -14,8 +14,22 @@ class BlogList extends Component{
 
       };
   }
+  /**
+   * 生命周期函数
+   */
   componentWillMount(){
-    this.props.dispatch(actions.QUERY_BLOG(this.props.dispatch));
+    this.props.dispatch(actions.QUERY_BLOG('all',this.props.dispatch));
+  }
+  componentWillReceiveProps(nextProps){
+    //message.success(nextProps.status);
+  }
+  shouldComponentUpdate(nextProps,nextState){
+    //当查询单个博客时，不刷新博客列表页面
+    if(nextProps.status === 'QUERY_SINGLE_BLOG_RESULT'){
+      return false;
+    }else{
+      return true;
+    }
   }
   /**
    * 列表列名标题
@@ -70,7 +84,7 @@ class BlogList extends Component{
    * 修改博客
    */
   modifyBlog = (record) =>{
-    message.success('修改博客ID：' + record.id);
+    this.props.dispatch(actions.MODIFY_SINGLE_BLOG({id: record.id}));
   }
   /**
    * 删除单个博客
@@ -98,10 +112,6 @@ class BlogList extends Component{
       selectedRowKeys: selectedRowKeys,
       selectedRows: selectedRows
     });
-    //获取所选CheckBox数组
-    if(selectedRows.length > 0){
-      message.success(selectedRows[0].id);
-    }
   }
   render() {
     const { loading, selectedRowKeys } = this.state;
