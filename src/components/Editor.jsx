@@ -21,7 +21,7 @@ class Editor extends React.Component {
     }
   }
   componentWillReceiveProps(nextProps){
-      message.success('redux: ' + nextProps.status);
+      //message.success('redux: ' + nextProps.status);
   }
   menu = (
     <Menu selectable={true} defaultSelectedKeys={['1']} onClick={(item)=>{this.setState({articleType: item.key})}}>

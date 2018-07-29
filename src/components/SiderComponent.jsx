@@ -19,7 +19,6 @@ class SiderComponent extends Component {
    * 点击不同的menu子元素，触发不同的action，显示相应页面
    */
   onMenuClick = (key) =>{
-    message.success(key);
     switch(key){
       case '新建博客':
         this.props.dispatch(actions.NEW_BLOG());
