@@ -11,6 +11,11 @@ export const blog = handleActions({
         status:action.type,
         data: action.payload.data
     }),
+    QUERY_SINGLE_BLOG_RESULT: (state,action)=>({
+        ...state,
+        status:action.type,
+        data: action.payload.data
+    }),
     DELETE_BLOG_RESULT: (state,action)=>({
         ...state,
         status:action.type,

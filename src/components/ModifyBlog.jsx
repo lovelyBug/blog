@@ -7,7 +7,7 @@ import '../css/components/Editor.css';
 import {connect} from 'react-redux';
 import * as actions from '../action/index';
 
-class Editor extends React.Component {
+class ModifyBlog extends React.Component {
   constructor(props){
     super(props);
     this.state={
@@ -20,11 +20,29 @@ class Editor extends React.Component {
         isPrivate: false,
     }
   }
+  /**
+   * 生命周期函数
+   */
+  componentWillMount(){
+    this.props.dispatch(actions.QUERY_BLOG(this.props.id,this.props.dispatch));
+  }
   componentWillReceiveProps(nextProps){
-    //   if(nextProps.status === ''){
-
-    //   }
-      message.success('redux: ' + nextProps.status);
+      if(nextProps.status === 'QUERY_SINGLE_BLOG_RESULT'){
+        let data = nextProps.data;
+        this.setState({
+            articleTitle: data[0].title,
+            //articleContent: data[0].content,
+            //articleLabel: data[0].label,
+            showArticleLabelText: data[0].label,
+            articleType: data[0].type,
+            articleSort: data[0].classify,
+            isPrivate: data[0].isPrivate,
+        });
+      }
+      if(nextProps.status === 'MODIFY_BLOG_RESULT'){
+        message.success(nextProps.data);
+      }
+      
   }
   menu = (
     <Menu selectable={true} defaultSelectedKeys={['1']} onClick={(item)=>{this.setState({articleType: item.key})}}>
@@ -78,31 +96,26 @@ class Editor extends React.Component {
     });
   }
   /**
-   * 发布博客时触发该事件
+   * 修改并发布博客
    */
-  publishBlog = () =>{
-    this.props.dispatch(actions.QUERY_BLOG('all',this.props.dispatch));
-  }
-  /**
-   * 保存博客时触发该事件
-   */
-  saveBlog = () =>{
+  modifyBlog = () =>{
         //获取content
         //this.editorInstance.getRawContent().blocks[0].text;
         //获取Raw格式内容
         //this.editorInstance.getHTMLContent();
         var myDate = new Date();
         let time = myDate.toLocaleString();
-        let info = "title=" + this.state.articleTitle +
+        let info =  "title=" + this.state.articleTitle +
                     "&content=" + this.editorInstance.getHTMLContent() +
                     "&label=" + this.state.showArticleLabelText + 
                     "&type=" + this.state.articleType + 
                     "&classify=" + this.state.articleSort + 
                     "&isPrivate=" + this.state.isPrivate + 
                     "&createTime=" + time + 
-                    "&isPublish=" + 0;
+                    "&isPublish=" + 0 + 
+                    "&id=" + this.props.id;
         //发送saveBlog的action
-        this.props.dispatch(actions.ADD_BLOG(info,this.props.dispatch));
+        this.props.dispatch(actions.MODIFY_BLOG(info,this.props.dispatch));
   }
   render () {
     const editorProps = {
@@ -115,7 +128,7 @@ class Editor extends React.Component {
     return (
       <div className="demo">
         <div className='blog-title-style'>
-            <input className='blog-title-input' placeholder='请输入文章标题' onChange={this.handleArticleTitleChange}/>
+            <input className='blog-title-input' value={this.state.articleTitle} placeholder='请输入文章标题' onChange={this.handleArticleTitleChange}/>
         </div>
         <BraftEditor ref={instance => this.editorInstance = instance} {...editorProps} />
         <hr />
@@ -146,8 +159,7 @@ class Editor extends React.Component {
             <Switch onChange={(checked)=>{this.setState({isPrivate: checked})}} style={{ marginLeft: 8 }} checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="cross" />} />
         </div>
         <div className='blog-btn-div-style'>
-            <Button className='publish-btn' type="primary" onClick={this.publishBlog}>发布博客</Button>
-            <Button className='save-btn' type="primary" onClick={this.saveBlog}>保存为草稿</Button>
+            <Button className='publish-btn' type="primary" onClick={this.modifyBlog}>发布博客</Button>
         </div>
       </div>
     )
@@ -157,4 +169,4 @@ const mapStateToProps = (state,ownProps)=>({
     status: state.blog.status,
     data: state.blog.data
 });
-export default connect(mapStateToProps)(Editor);
+export default connect(mapStateToProps)(ModifyBlog);

@@ -53,6 +53,11 @@ app.post('/add_blog',urlencodeParser,(req,res)=>{
  */
 app.post('/query_blog',urlencodeParser,(req,res)=>{
     let sql = 'SELECT * FROM blogs';
+    //根据传来的req，判断是否为多重查询
+    if(req.body.data !== 'all'){
+        sql = 'SELECT * FROM blogs WHERE id=' + req.body.data;
+    }
+    
     db.DBConnection.query(sql,(err,rows,fields)=>{
         if(err){
             console.log(err);
@@ -88,6 +93,23 @@ app.post('/delete_blog',urlencodeParser,(req,res)=>{
     });
     });
     
+});
+/**
+ * 修改博客信息
+ */
+app.post('/modify_blog',urlencodeParser,(req,res)=>{
+    let sql = `UPDATE blogs SET title='${req.body.title}',content='${req.body.content}',label='${req.body.label}',type='${req.body.type}',classify='${req.body.classify}',isPrivate='${req.body.isPrivate}' WHERE id=${req.body.id}`;
+    db.DBConnection.query(sql,(err,rows,fields)=>{
+        if(err){
+            console.log(err);
+            return;
+        }
+        let success = {
+            message: '修改博客成功！'
+        };
+        console.log('success');
+        res.send(success);
+    });
 });
 /**
  * 监听9000端口
