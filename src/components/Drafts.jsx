@@ -20,7 +20,7 @@ class Drafts extends Component{
         this.props.dispatch(actions.QUERY_UNPUBLISH_BLOG(this.props.dispatch));
     }
     componentWillReceiveProps(nextProps){
-        message.success('1: ' + nextProps.status);
+        //message.success('1: ' + nextProps.status);
     }
     /**
      * 列表列名标题
@@ -74,7 +74,7 @@ class Drafts extends Component{
      * 删除单个博客
      */
     deleteBlog = (record) =>{
-        let info = 'data=' + record.id + '&isPublish=0&isDeleteClear=0',isPublish = 0;;
+        let info = 'data=' + record.id + '&isPublish=0',isPublish = 0;;
         this.props.dispatch(actions.DELETE_BLOG(isPublish,info,this.props.dispatch));
     }
     /**
@@ -87,7 +87,7 @@ class Drafts extends Component{
         for(let i = 0;i < rows.length;i++ ){
             blogIds.push(rows[i].id);
         }
-        let info = 'data=' + blogIds + '&isPublish=0&isDeleteClear=0',isPublish = 0;
+        let info = 'data=' + blogIds + '&isPublish=0',isPublish = 0;
         this.props.dispatch(actions.DELETE_BLOG(isPublish,info,this.props.dispatch));
     }
     /**

@@ -21,7 +21,7 @@ class BlogList extends Component{
     this.props.dispatch(actions.QUERY_BLOG('all',this.props.dispatch));
   }
   componentWillReceiveProps(nextProps){
-    message.success(nextProps.status);
+    //message.success(nextProps.status);
   }
   shouldComponentUpdate(nextProps,nextState){
     //当查询单个博客时，不刷新博客列表页面
@@ -90,7 +90,7 @@ class BlogList extends Component{
    * 删除单个博客
    */
   deleteBlog = (record) =>{
-    let info = 'data=' + record.id + '&isPublish=1&isDeleteClear=0',isPublish = 1;
+    let info = 'data=' + record.id + '&isPublish=1',isPublish = 1;
     this.props.dispatch(actions.DELETE_BLOG(isPublish,info,this.props.dispatch));
   }
   /**
@@ -103,7 +103,7 @@ class BlogList extends Component{
     for(let i = 0;i < rows.length;i++ ){
       blogIds.push(rows[i].id);
     }
-    let info = 'data=' + blogIds + '&isPublish=1&isDeleteClear=0',isPublish = 1;
+    let info = 'data=' + blogIds + '&isPublish=1',isPublish = 1;
     this.props.dispatch(actions.DELETE_BLOG(isPublish,info,this.props.dispatch));
   }
   /**
