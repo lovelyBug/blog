@@ -107,8 +107,8 @@ class Editor extends React.Component {
   render () {
     const editorProps = {
       height: 500,
-      contentFormat: 'raw',
-      initialContent: 'Hello World!',
+    //   contentFormat: 'raw',
+    //   initialContent: 'Hello World!',
       placeholder: '在这里编辑文章'
     }
 

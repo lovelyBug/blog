@@ -18,6 +18,7 @@ class ModifyBlog extends React.Component {
         articleType: '请选择',
         articleSort: '选择分类',
         isPrivate: false,
+        contentId: 0
     }
   }
   /**
@@ -31,18 +32,17 @@ class ModifyBlog extends React.Component {
         let data = nextProps.data;
         this.setState({
             articleTitle: data[0].title,
-            //articleContent: data[0].content,
-            //articleLabel: data[0].label,
+            articleContent: data[0].content,
             showArticleLabelText: data[0].label,
             articleType: data[0].type,
             articleSort: data[0].classify,
             isPrivate: data[0].isPrivate,
+            contentId: data[0].id
         });
       }
       if(nextProps.status === 'MODIFY_BLOG_RESULT'){
         message.success(nextProps.data);
-      }
-      
+      } 
   }
   menu = (
     <Menu selectable={true} defaultSelectedKeys={['1']} onClick={(item)=>{this.setState({articleType: item.key})}}>
@@ -120,9 +120,10 @@ class ModifyBlog extends React.Component {
   render () {
     const editorProps = {
       height: 500,
-      contentFormat: 'raw',
-      initialContent: 'Hello World!',
-      placeholder: '在这里编辑文章'
+      contentFormat: 'html',
+      initialContent: this.state.articleContent,
+      placeholder: '在这里编辑文章',
+      contentId: this.state.contentId
     }
 
     return (
