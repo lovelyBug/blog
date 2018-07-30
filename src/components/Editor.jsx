@@ -17,7 +17,7 @@ class Editor extends React.Component {
         showArticleLabelText: '',
         articleType: '请选择',
         articleSort: '选择分类',
-        isPrivate: false,
+        isPrivate: false
     }
   }
   componentWillReceiveProps(nextProps){
@@ -81,12 +81,47 @@ class Editor extends React.Component {
    * 发布博客时触发该事件
    */
   publishBlog = () =>{
-    this.props.dispatch(actions.QUERY_BLOG('all',this.props.dispatch));
+      if(this.state.articleTitle.length === 0){
+        message.warning('标题不能为空！');
+        return;
+      }
+      if(this.editorInstance.getRawContent().blocks[0].text.length === 0){
+        message.warning('内容不能为空！');
+        return;
+      }
+      if(this.state.articleType === '请选择'){
+        message.warning('请选择文章类型！');
+        return;
+      }
+      if(this.state.articleSort === '选择分类'){
+        message.warning('请选择博客分类！');
+        return;
+      }
+      var myDate = new Date();
+      let time = myDate.toLocaleString();
+      let info = "title=" + this.state.articleTitle +
+                 "&content=" + this.editorInstance.getHTMLContent() +
+                 "&label=" + this.state.showArticleLabelText + 
+                 "&type=" + this.state.articleType + 
+                 "&classify=" + this.state.articleSort + 
+                 "&isPrivate=" + this.state.isPrivate + 
+                 "&createTime=" + time + 
+                 "&isPublish=" + 1;
+      //发送saveBlog的action
+      this.props.dispatch(actions.ADD_BLOG(info,this.props.dispatch));
   }
   /**
    * 保存博客时触发该事件
    */
   saveBlog = () =>{
+        if(this.state.articleTitle.length === 0){
+            message.warning('标题不能为空！');
+            return;
+        }
+        if(this.editorInstance.getRawContent().blocks[0].text.length === 0){
+            message.warning('内容不能为空！');
+            return;
+        }
         //获取content
         //this.editorInstance.getRawContent().blocks[0].text;
         //获取Raw格式内容
