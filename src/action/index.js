@@ -23,6 +23,12 @@ export const MODIFY_SINGLE_BLOG = createAction('MODIFY_SINGLE_BLOG');
  */
 export const QUERY_UNPUBLISH_BLOG_RESULT = createAction('QUERY_UNPUBLISH_BLOG_RESULT');
 export const DELETE_UNPUBLISH_BLOG_RESULT = createAction('DELETE_UNPUBLISH_BLOG_RESULT');
+/**
+ * recycle bin
+ */
+export const QUERY_DELETE_BLOG_RESULT = createAction('QUERY_DELETE_BLOG_RESULT');
+export const REAL_DELETE_BLOG_RESULT = createAction('REAL_DELETE_BLOG_RESULT');
+export const RESTORE_BLOG_RESULT = createAction('RESTORE_BLOG_RESULT');
 
 /**
  * 添加博客
@@ -48,7 +54,7 @@ export const ADD_BLOG = (info,dispatch) => async =>{
         })
         .catch((e)=>{
           message.error('请求失败！');
-        });
+    });
 }
 /**
  * 查询已经发布的博客
@@ -79,7 +85,7 @@ export const QUERY_BLOG = (info,dispatch) => async =>{
         })
         .catch((e)=>{
           message.error('请求失败！');
-        });
+    });
 }
 /**
  * 查询未发布的博客
@@ -102,7 +108,30 @@ export const QUERY_UNPUBLISH_BLOG = (dispatch) => async =>{
         })
         .catch((e)=>{
           message.error('请求失败！');
-        });
+    });
+}
+/**
+ * 查询已经放入回收站里的博客
+ * @param {*} dispatch 
+ */
+export const QUERY_DELETE_BLOG = (dispatch) => async =>{
+    let URL = 'http://localhost:9000/query_delete_blog';
+    fetch(URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        mode:'cors',
+        })
+        .then((res)=>{
+            //从服务端传来的JSON数据
+            res.json().then(function (json) {
+                dispatch(QUERY_DELETE_BLOG_RESULT({data: json}));
+            });
+        })
+        .catch((e)=>{
+          message.error('请求失败！');
+    });
 }
 /**
  * 删除博客
@@ -135,7 +164,36 @@ export const DELETE_BLOG = (isPublish,info,dispatch) => async =>{
         })
         .catch((e)=>{
           message.error('请求失败！');
-        });
+    });
+}
+/**
+ * 彻底删除博客
+ *
+ * @param {*} info 
+ * @param {*} dispatch 
+ */
+export const DELETE_BLOG_CLEARLY = (info,dispatch) => async =>{
+    let URL = 'http://localhost:9000/delete_blog_clearly';
+    fetch(URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: info,
+        mode:'cors',
+        })
+        .then((res)=>{
+            res.json().then(function (json) {
+                //从服务端传来的JSON数据
+                dispatch(REAL_DELETE_BLOG_RESULT({data: json}));   
+            })
+            .catch((e)=>{
+                message.error('解析失败！' + e);
+            });
+        })
+        .catch((e)=>{
+          message.error('请求失败！');
+    });
 }
 /**
  * 修改博客
@@ -161,5 +219,34 @@ export const MODIFY_BLOG = (info,dispatch) => async =>{
         })
         .catch((e)=>{
           message.error('请求失败！');
-        });
+    });
+}
+/**
+ * 还原博客
+ * @param {*} info 
+ * @param {*} dispatch 
+ */
+export const RESTORE_BLOG = (info,dispatch) => async =>{
+    let URL = 'http://localhost:9000/restore_blog';
+    fetch(URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: info,
+        mode:'cors',
+        })
+        .then((res)=>{
+            res.json().then(function (json) {
+                //从服务端传来的JSON数据
+                dispatch(RESTORE_BLOG_RESULT({data: json}));
+                
+            })
+            .catch((e)=>{
+                message.error('解析失败！' + e);
+            });
+        })
+        .catch((e)=>{
+          message.error('请求失败！');
+    });
 }

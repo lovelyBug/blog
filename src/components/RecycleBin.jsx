@@ -14,6 +14,12 @@ class RecycleBin extends Component{
         };
     }
     /**
+     * 生命周期函数
+     */
+    componentWillMount(){
+        this.props.dispatch(actions.QUERY_DELETE_BLOG(this.props.dispatch));
+    }
+    /**
      * 列表列名标题
      */
     columns = [{
@@ -51,8 +57,8 @@ class RecycleBin extends Component{
         render: (text,record,)=>(
         <span>
             <Button onClick={()=>{this.readBlog(record)}}>查看</Button>
-            <Button onClick={()=>{this.modifyBlog(record)}}>修改</Button>
-            <Button onClick={()=>{this.deleteBlog(record)}}>删除</Button>
+            <Button onClick={()=>{this.restoreBlog(record)}}>还原</Button>
+            <Button onClick={()=>{this.deleteBlog(record)}}>彻底删除</Button>
         </span>
         )
     }];
@@ -72,7 +78,7 @@ class RecycleBin extends Component{
      * 删除单个博客
      */
     deleteBlog = (record) =>{
-        this.props.dispatch(actions.DELETE_BLOG('data=' + record.id,this.props.dispatch));
+        this.props.dispatch(actions.DELETE_BLOG_CLEARLY('data=' + record.id,this.props.dispatch));
     }
     /**
      * 删除多个博客
@@ -84,7 +90,25 @@ class RecycleBin extends Component{
         for(let i = 0;i < rows.length;i++ ){
         blogIds.push(rows[i].id);
         }
-        this.props.dispatch(actions.DELETE_BLOG('data=' + blogIds,this.props.dispatch));
+        this.props.dispatch(actions.DELETE_BLOG_CLEARLY('data=' + blogIds,this.props.dispatch));
+    }
+    /**
+     * 还原单个博客
+     */
+    restoreBlog = (record) =>{
+        this.props.dispatch(actions.RESTORE_BLOG('data=' + record.id,this.props.dispatch));
+    }
+    /**
+     * 还原多个博客
+     */
+    restoreBlogs = () =>{
+        let rows = this.state.selectedRows;
+        let blogIds = [];
+        //循环获取已选择博客ID
+        for(let i = 0;i < rows.length;i++ ){
+        blogIds.push(rows[i].id);
+        }
+        this.props.dispatch(actions.RESTORE_BLOG('data=' + blogIds,this.props.dispatch));
     }
     /**
      * 每次勾选/取消勾选复选框时触发的事件
@@ -111,7 +135,16 @@ class RecycleBin extends Component{
                         disabled={!hasSelected}
                         loading={loading}
                     >
-                        删除
+                        彻底删除
+                    </Button>
+                    <Button
+                        style={{marginLeft: 8}}
+                        type="primary"
+                        onClick={this.restoreBlogs}
+                        disabled={!hasSelected}
+                        loading={loading}
+                    >
+                        还原
                     </Button>
                     <span style={{ marginLeft: 8 }}>
                         {hasSelected ? `已选择 ${selectedRowKeys.length} 项` : ''}
@@ -123,7 +156,7 @@ class RecycleBin extends Component{
     }
 }
 const mapStateToProps = (state,ownProps)=>({
-    status: state.blog.status,
-    data: state.blog.data
+    status: state.recyclebin.status,
+    data: state.recyclebin.data
   });
 export default connect(mapStateToProps)(RecycleBin);
