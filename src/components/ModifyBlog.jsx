@@ -99,6 +99,22 @@ class ModifyBlog extends React.Component {
    * 修改并发布博客
    */
   modifyBlog = () =>{
+        if(this.state.articleTitle.length === 0){
+            message.warning('标题不能为空！');
+            return;
+        }
+        if(this.editorInstance.getRawContent().blocks[0].text.length === 0){
+            message.warning('内容不能为空！');
+            return;
+        }
+        if(this.state.articleType === '请选择'){
+            message.warning('请选择文章类型！');
+            return;
+        }
+        if(this.state.articleSort === '选择分类'){
+            message.warning('请选择博客分类！');
+            return;
+        }
         //获取content
         //this.editorInstance.getRawContent().blocks[0].text;
         //获取Raw格式内容
@@ -160,7 +176,7 @@ class ModifyBlog extends React.Component {
             <Switch onChange={(checked)=>{this.setState({isPrivate: checked})}} style={{ marginLeft: 8 }} checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="cross" />} />
         </div>
         <div className='blog-btn-div-style'>
-            <Button className='publish-btn' type="primary" onClick={this.modifyBlog}>发布博客</Button>
+            <Button className='publish-btn' type="primary" onClick={this.modifyBlog}>修改并发布博客</Button>
         </div>
       </div>
     )
