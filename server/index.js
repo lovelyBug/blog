@@ -33,9 +33,10 @@ app.post('/add_blog',urlencodeParser,(req,res)=>{
         req.body.classify,
         req.body.isPrivate,
         req.body.createTime,
-        req.body.isPublish
+        req.body.isPublish,
+        req.body.isDelete
     ];
-    let sql = 'INSERT blogs(title,content,label,type,classify,isPrivate,createTime,isPublish) VALUES(?,?,?,?,?,?,?,?)';
+    let sql = 'INSERT blogs(title,content,label,type,classify,isPrivate,createTime,isPublish,isDelete) VALUES(?,?,?,?,?,?,?,?,?)';
     db.DBConnection.query(sql,params,(err,rows,fields)=>{
         if(err){
             console.log(err);
@@ -49,14 +50,28 @@ app.post('/add_blog',urlencodeParser,(req,res)=>{
     });
 });
 /**
- * 查询博客信息
+ * 查询已经发布的博客信息
  */
 app.post('/query_blog',urlencodeParser,(req,res)=>{
-    let sql = 'SELECT * FROM blogs';
+    let sql = 'SELECT * FROM blogs WHERE isPublish=1 AND isDelete=0';
     //根据传来的req，判断是否为多重查询
     if(req.body.data !== 'all'){
-        sql = 'SELECT * FROM blogs WHERE id=' + req.body.data;
+        sql = 'SELECT * FROM blogs WHERE isDelete=0 AND id=' + req.body.data;
     }
+    
+    db.DBConnection.query(sql,(err,rows,fields)=>{
+        if(err){
+            console.log(err);
+            return;
+        }
+        res.send(rows);
+    });
+});
+/**
+ * 查询未发布的博客信息
+ */
+app.post('/query_unpublish_blog',urlencodeParser,(req,res)=>{
+    let sql = 'SELECT * FROM blogs WHERE isPublish=0 AND isDelete=0';
     
     db.DBConnection.query(sql,(err,rows,fields)=>{
         if(err){
@@ -70,19 +85,28 @@ app.post('/query_blog',urlencodeParser,(req,res)=>{
  * 删除博客，删除成功后立即查询数据库并返回最新的数据库信息
  */
 app.post('/delete_blog',urlencodeParser,(req,res)=>{
-    //单个博客删除
-    let sql = 'DELETE  FROM blogs WHERE id=' + req.body.data;
-    if(req.body.data.length > 1){
-        //多个博客删除
-        sql = 'DELETE  FROM blogs WHERE id in (' + req.body.data +  ')';
-    }
+    console.log(req.body.isDeleteClear);
+    let sql = '';
+    if(req.body.isDeleteClear == 1){
+        sql = 'DELETE  FROM blogs WHERE id=' + req.body.data;
+        if(req.body.data.length > 1){
+            sql = 'DELETE  FROM blogs WHERE id in (' + req.body.data +  ')';
+        }
+    }else{
+        sql = 'UPDATE blogs SET isDelete=1 WHERE id=' + req.body.data;
+        console.log(req.body.data);
+        //return;
+        if(req.body.data.length > 1){
+            sql = 'UPDATE blogs SET isDelete=1 WHERE id in (' + req.body.data +  ')';
+        }
+    }   
     db.DBConnection.query(sql,(err,rows,fields)=>{
         if(err){
             console.log(err);
             return;
         }
         console.log('delete success');
-        let str = 'SELECT * FROM blogs';
+        let str = 'SELECT * FROM blogs WHERE isDelete=0 AND isPublish=' + req.body.isPublish;
         db.DBConnection.query(str,(err,rows,fields)=>{
             if(err){
                 console.log(err);
@@ -90,7 +114,7 @@ app.post('/delete_blog',urlencodeParser,(req,res)=>{
             }
             console.log('query success');
             res.send(rows);
-    });
+        });
     });
     
 });
