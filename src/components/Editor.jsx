@@ -106,7 +106,8 @@ class Editor extends React.Component {
                  "&classify=" + this.state.articleSort + 
                  "&isPrivate=" + this.state.isPrivate + 
                  "&createTime=" + time + 
-                 "&isPublish=" + 1;
+                 "&isPublish=1" + 
+                 "&isDelete=0";
       //发送saveBlog的action
       this.props.dispatch(actions.ADD_BLOG(info,this.props.dispatch));
   }
@@ -135,7 +136,8 @@ class Editor extends React.Component {
                     "&classify=" + this.state.articleSort + 
                     "&isPrivate=" + this.state.isPrivate + 
                     "&createTime=" + time + 
-                    "&isPublish=" + 0;
+                    "&isPublish=0" + 
+                    "&isDelete=0";
         //发送saveBlog的action
         this.props.dispatch(actions.ADD_BLOG(info,this.props.dispatch));
   }
