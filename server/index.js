@@ -56,7 +56,7 @@ app.post('/query_blog',urlencodeParser,(req,res)=>{
     let sql = 'SELECT * FROM blogs WHERE isPublish=1 AND isDelete=0';
     //根据传来的req，判断是否为多重查询
     if(req.body.data !== 'all'){
-        sql = 'SELECT * FROM blogs WHERE isDelete=0 AND id=' + req.body.data;
+        sql = 'SELECT * FROM blogs WHERE isDelete=0 AND isPublish=1 AND id=' + req.body.data;
     }
     
     db.DBConnection.query(sql,(err,rows,fields)=>{

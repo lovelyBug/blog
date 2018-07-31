@@ -28,4 +28,5 @@ export const blog = handleActions({
     })
 },{
     //初始默认值
+    data: []
 });

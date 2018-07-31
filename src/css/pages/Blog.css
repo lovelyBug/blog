@@ -12,10 +12,10 @@
   background-color: #001529;
 }
 .blog-sider{
-  background-color: #290002;
+  background-color: white;
+  padding-top: 20px;
 }
-.blog-footer{
-  text-align: center;
-  /* background-color: #001529; */
-  background-color: #00291d;
+.blog-content{
+  background-color: white;
+  padding-top: 20px;
 }
