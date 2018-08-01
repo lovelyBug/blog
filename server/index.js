@@ -191,6 +191,47 @@ app.post('/restore_blog',urlencodeParser,(req,res)=>{
     
 });
 /**
+ * 添加新评论到数据库
+ */
+app.post('/add_comment',urlencodeParser,(req,res)=>{
+    let params = [
+        req.body.userName,
+        req.body.commentText,
+        req.body.email,
+        req.body.createTime,
+        req.body.blogID
+    ];
+    let sql = 'INSERT comments(userName,commentText,email,createTime,blogID) VALUES(?,?,?,?,?)';
+    db.DBConnection.query(sql,params,(err,rows,fields)=>{
+        if(err){
+            console.log(err);
+            return;
+        }
+        let str = 'SELECT * FROM comments WHERE blogID=' + req.body.blogID;
+        db.DBConnection.query(str,(err,rows,fields)=>{
+            if(err){
+                console.log(err);
+                return;
+            }
+            console.log('query success');
+            res.send(rows);
+        });
+    });
+});
+/**
+ * 查询所有评论
+ */
+app.post('/query_comment',urlencodeParser,(req,res)=>{
+    let sql = 'SELECT * FROM comments WHERE blogID=' + req.body.blogId;
+    db.DBConnection.query(sql,(err,rows,fields)=>{
+        if(err){
+            console.log(err);
+            return;
+        }
+        res.send(rows);
+    });
+});
+/**
  * 监听9000端口
  */
 app.listen(9000,()=>{

@@ -1,0 +1,18 @@
+
+#blog-container{
+    width: 90%;
+    margin-left: 5%;
+    margin-bottom: 50px;
+}
+#blog-content{
+      
+}
+.blog-title{
+    text-align: center;
+}
+.blog-createTime{
+    color: gray;
+}
+.blog-copyright{
+    color: gray;
+}
