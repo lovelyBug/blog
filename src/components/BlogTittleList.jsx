@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Menu, Icon,message } from 'antd';
 import * as actions from '../action/index';
 import {connect} from 'react-redux';
+import GlobalVariable from '../GlobalInfo/GlobalVariable';
 class BlogTittleList extends Component {
     constructor(props){
         super(props);
@@ -21,6 +22,11 @@ class BlogTittleList extends Component {
         }else{
             return false;
         }
+    }
+    componentDidUpdate(){
+        this.props.dispatch(actions.QUERY_BLOG(this.props.data[0].id,this.props.dispatch));
+        GlobalVariable.BlogListData = this.props.data;
+        message.success(GlobalVariable.BlogListData[0].title);
     }
     /**
      * 点击不同的menu子元素，触发不同的action，显示相应博客内容页面
