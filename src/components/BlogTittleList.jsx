@@ -26,7 +26,6 @@ class BlogTittleList extends Component {
     componentDidUpdate(){
         this.props.dispatch(actions.QUERY_BLOG(this.props.data[0].id,this.props.dispatch));
         GlobalVariable.BlogListData = this.props.data;
-        message.success(GlobalVariable.BlogListData[0].title);
     }
     /**
      * 点击不同的menu子元素，触发不同的action，显示相应博客内容页面

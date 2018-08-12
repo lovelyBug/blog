@@ -26,10 +26,7 @@ class SiderComponent extends Component {
       case '博客列表':
         this.props.dispatch(actions.BLOG_LIST());
         break;
-      case '未读评论':
-        this.props.dispatch(actions.UNREAD_COMMENT());
-        break;
-      case '所有评论':
+      case '评论管理':
         this.props.dispatch(actions.ALL_COMMENT());
         break;
       case '草稿箱':
@@ -59,10 +56,10 @@ class SiderComponent extends Component {
             <Menu.Item key="新建博客">新建博客</Menu.Item>
             <Menu.Item key="博客列表">博客列表</Menu.Item>
           </SubMenu>
-          <SubMenu key="sub2" title={<span><Icon type="message" /><span>评论管理</span></span>}>
-            <Menu.Item key="未读评论">未读评论</Menu.Item>
-            <Menu.Item key="所有评论">所有评论</Menu.Item>
-          </SubMenu>
+          <Menu.Item key="评论管理">
+            <Icon type="message" />
+            <span>评论管理</span>
+          </Menu.Item>
           <Menu.Item key="草稿箱">
             <Icon type="inbox" />
             <span>草稿箱</span>
