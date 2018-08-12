@@ -2,7 +2,6 @@ import React,{Component} from 'react';
 import * as actions from '../action/index';
 import {connect} from 'react-redux';
 import '../css/components/BlogContent.css';
-import { Menu, Icon,message } from 'antd';
 import Comment from '../components/Comment';
 import * as GlobalFunction from '../GlobalInfo/GlobalFunction';
 import GlobalVariable from '../GlobalInfo/GlobalVariable';

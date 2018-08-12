@@ -4,10 +4,12 @@ import {content} from './content';
 import {drafts} from './drafts';
 import {recyclebin} from './recyclebin';
 import {comment} from './comment';
+import {replyComment} from './replyComment';
 export const rootReducer = combineReducers({
     blog,
     content,
     drafts,
     recyclebin,
-    comment
+    comment,
+    replyComment
 });

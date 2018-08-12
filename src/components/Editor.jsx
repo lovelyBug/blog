@@ -20,12 +20,6 @@ class Editor extends React.Component {
         isPrivate: false
     }
   }
-  componentWillReceiveProps(nextProps){
-    //   if(nextProps.status === ''){
-
-    //   }
-      message.success('redux: ' + nextProps.status);
-  }
   menu = (
     <Menu selectable={true} defaultSelectedKeys={['1']} onClick={(item)=>{this.setState({articleType: item.key})}}>
         <Menu.Item key="请选择">请选择</Menu.Item>

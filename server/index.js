@@ -223,6 +223,40 @@ app.post('/add_comment',urlencodeParser,(req,res)=>{
  */
 app.post('/query_comment',urlencodeParser,(req,res)=>{
     let sql = 'SELECT * FROM comments WHERE blogID=' + req.body.blogId;
+    if(req.body.blogId === 'all'){
+        sql = 'SELECT * FROM comments';
+    }
+    db.DBConnection.query(sql,(err,rows,fields)=>{
+        if(err){
+            console.log(err);
+            return;
+        }
+        res.send(rows);
+    });
+});
+/**
+ * 添加新回复评论到数据库
+ */
+app.post('/reply_comment',urlencodeParser,(req,res)=>{
+    let params = [
+        req.body.replyText,
+        req.body.commentID,
+        req.body.createTime
+    ];
+    let sql = 'INSERT replycomments(replyText,commentID,createTime) VALUES(?,?,?)';
+    db.DBConnection.query(sql,params,(err,rows,fields)=>{
+        if(err){
+            console.log(err);
+            return;
+        }
+        res.send(rows);
+    });
+});
+/**
+ * 查询相关回复评论
+ */
+app.post('/query_reply_comment',urlencodeParser,(req,res)=>{
+    let sql = 'SELECT * FROM replycomments WHERE commentID=' + req.body.commentID;
     db.DBConnection.query(sql,(err,rows,fields)=>{
         if(err){
             console.log(err);

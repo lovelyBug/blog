@@ -11,7 +11,7 @@ class Blog extends Component{
           <Layout className='blog-layout'>
                 <Header className='blog-header'>CLF 的博客主页</Header>
                 <Layout>
-                    <Sider className='blog-sider'><BlogTittleList/></Sider>
+                    <Sider width='18%' className='blog-sider'><BlogTittleList/></Sider>
                     <Content className='blog-content'><BlogContent/></Content>
                 </Layout>            
           </Layout>
